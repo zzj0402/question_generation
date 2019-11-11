@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  qg:
+    build: .
+    ports:
+      - "5556:5556"
+    links:
+      - corenlp
+  corenlp:
+    image: "nlpbox/corenlp"
+    ports:
+      - "9000:9000"

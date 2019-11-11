@@ -32,7 +32,6 @@ def copy_sent_with_one_ans(sent, begin_ind, end_ind):
     return new_sent
 
 
-
 def separate_and_duplicate_ans_sents(sents):
     new_sents = []
     for sent in sents:
@@ -51,7 +50,6 @@ def separate_and_duplicate_ans_sents(sents):
                 else:
                     begin_ind, end_ind = None, None
     return new_sents
-
 
 
 def get_possible_ans_tags(ner_features_path='data/ner_features'):
@@ -92,7 +90,8 @@ def get_featured_sents(corenlp_output):
                 case_tag = 'LOW'
             ner_tag = token['ner']
             pos_tag = token['pos']
-            sent.append(({'token': lower_word, 'ner': ner_tag, 'case_tag': case_tag, 'pos_tag': pos_tag}))
+            sent.append(({'token': lower_word, 'ner': ner_tag,
+                          'case_tag': case_tag, 'pos_tag': pos_tag}))
         sents.append(sent)
     return sents
 
@@ -103,7 +102,7 @@ def main(text):
         'outputFormat': 'json'}
     )
     if type(output) == str:
-        output =json.loads(output, encoding='utf-8', strict=False)
+        output = json.loads(output, encoding='utf-8', strict=False)
 
     possible_ans_tags = get_possible_ans_tags()
     sents = get_featured_sents(output)
@@ -118,6 +117,3 @@ def main(text):
 if __name__ == '__main__':
     text = argv[1]
     main(text)
-
-
-

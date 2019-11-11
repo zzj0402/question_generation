@@ -32,7 +32,7 @@ P="Waiting had its world premiere at the \
   from critics. It was also screened at the closing gala of the London Asian \
   Film Festival, where Menon won the Best Director Award."
 echo "$P"
-./get_qnas "$P"
+./get_qnas "$P" "test.json"
 sleep 120
 
 echo "----------------Stopping containers----------------"

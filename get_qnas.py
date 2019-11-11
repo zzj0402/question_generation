@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-import zmq, sys, json
+import zmq
+import sys
+import json
 from signal import signal, SIGPIPE, SIG_DFL
+from sys import argv
 
 
 class ConnectionHandler:
@@ -11,8 +14,10 @@ class ConnectionHandler:
 
     def __call__(self, data):
         self.sock.send_string(json.dumps(data))
-        recieved = json.loads(str(self.sock.recv(), "utf-8"), encoding='utf-8', strict=False)
-        recieved = [(row[0]['tgt'], row[0]['pred_score'], row[0]['src']) for row in recieved]
+        recieved = json.loads(str(self.sock.recv(), "utf-8"),
+                              encoding='utf-8', strict=False)
+        recieved = [(row[0]['tgt'], row[0]['pred_score'], row[0]['src'])
+                    for row in recieved]
         return get_with_answers(recieved)
 
 
@@ -32,6 +37,8 @@ def get_with_answers(recieved):
         answers.append(' '.join(answer))
     return [(recieved[i][0], answers[i], recieved[i][1]) for i in range(len(recieved))]
 
+
+questionsAndAnswers = []
 if __name__ == '__main__':
     fin = sys.stdin
     data = [{"src": line} for line in fin]
@@ -41,3 +48,13 @@ if __name__ == '__main__':
 
     for target, answer, score in sorted(received, key=lambda x: x[2], reverse=True):
         print("{}\t{}\t{}".format(target, answer, score))
+        questionsAndAnswer = {}
+        questionsAndAnswer["question"] = target.capitalize()
+        questionsAndAnswer["answer"] = answer.capitalize()
+        questionsAndAnswer["score"] = score
+        # print(datum)
+        questionsAndAnswers.append(questionsAndAnswer)
+
+
+with open(argv[1], 'w', encoding="UTF-8") as fp:
+    json.dump(questionsAndAnswers, fp)
